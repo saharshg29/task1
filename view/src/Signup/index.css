@@ -1,0 +1,28 @@
+.form {
+    margin: 10vh 10vw 10vh 10vw;
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+}
+.container {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   border: 1 solid black ;
+}
+
+input {
+    margin: 5px;
+}
+
+.header {
+    font-size: x-large;
+    font-weight: bolder;
+    padding-top: 20vh;
+}
+
+
+.to {
+    color: blue;
+}
