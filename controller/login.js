@@ -1,5 +1,5 @@
 "use strict";
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const dotenv = require("dotenv").config();
@@ -12,39 +12,33 @@ const User = mongoose.model("User");
 const authRoute = express.Router();
 
 authRoute.post("/", async (req, res) => {
-  const { username, password, accounttype } = req.body;
-
-  if (!username || !password ) {
-    res.status(400).json({ msg: "Please fill all the fields" });
-  } else {
-    User.findOne({ username: username})
-      .then((user) => {
-        if (!user) {
-          res.status(400).json({ msg: "User does not found" });
-        } else {
-          console.log(user);
-          bcrypt.compare(password, user.password, (err, ress) => {
-            if (err) {
-              res.json({ err });
-            }
-            if (ress) {
-              const token = jwt.sign({ _id: user._id }, "tokyo@json");
-              const { _id, email, username } = user;
-              res.json({ token: token, user: { _id, email, username } });
-            } else {
-              return response.json({
-                success: false,
-                message: "passwords do not match",
-              });
-            }
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(422).json({ error: "please add username or password" });
+  }
+  User.findOne({ username: username }).then((savedUser) => {
+    if (!savedUser) {
+      return res.status(422).json({ error: "Invalid username or password" });
+    }
+    bcrypt
+      .compare(password, savedUser.password)
+      .then((doMatch) => {
+        if (doMatch) {
+          // res.json({message:"successfully signed in"})
+          const token = jwt.sign({ _id: savedUser._id }, "JWT_SECRET");
+          const { _id, name, username, followers, following, pic } = savedUser;
+          res.json({
+            token,
+            user: { _id, username, password },
           });
+        } else {
+          return res.status(422).json({ error: "Invalid username or password" });
         }
       })
-
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
-  }
+  });
 });
 
 module.exports = authRoute;
