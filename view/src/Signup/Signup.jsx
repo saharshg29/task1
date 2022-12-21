@@ -3,45 +3,50 @@ import { useNavigate } from "react-router-dom"
 // import M from 'materialize-css'
 
 import React, { useState } from 'react'
+import axios from "axios"
 
 function Signup() {
-    const [username, setusername] = useState(undefined)
-    const [password, setPassword] = useState(undefined)
-    const [email, setEmail] = useState(undefined)
+    const [username, setusername] = useState("")
+    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("")
     const navigate = useNavigate()
+    let data = JSON.stringify({
+        username,
+        password,
+        email,
+    })
+    const uploadFields = () => {
+
+        axios(
+            {
+                method: "post",
+                url: "/signup",
+                headers:
+                {
+                    "Content-Type": "application/json"
+                },
+                data: data
+            })
+            .then(res => {
+                if (res.data.error) {
+                    console.log(res.data.error)
+                    // M.toast({ html: data.error, classes: "#c62828 red darken-3" })
+                }
+                else {
+                    // M.toast({ html: data.message, classes: "#43a047 green darken-1" })
+                    console.log("Successfully account created");
+                    navigate('/login')
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+    }
 
     const PostData = () => {
-        console.log({ username, email, password });
-        let readyData = {
-          username,
-          password,
-          email
-        };
-        fetch("/signup", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(readyData),
-        })
-          .then((res) => {
-            res.json();
-          })
-          .then((data) => {
-            if (data.error) {
-              console.log(data);
-            } else {
-              console.log("Signup sucessfull");
-              navigate("/login");
-            }
-          })
-          .catch((err) => {
-            console.log(err);              
-            navigate("/login");
-          });
-      };
-    
-    
+
+        uploadFields()
+
+    }
     return (
         <>
             <div className="container">
@@ -58,7 +63,7 @@ function Signup() {
                         value={password} className="password" placeholder="password" />
                     <input
                         onClick={() => {
-                            console.log({ username, email, password })
+                            // console.log({ username, email, password })
                             PostData()
                         }} type="button" value="Signup" />
                 </div>

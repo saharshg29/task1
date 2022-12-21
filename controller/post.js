@@ -18,7 +18,7 @@ router.get("/allpost", (req, res) => {
     });
 });
 
-router.post("/createpost",requireLogin, (req, res) => {
+router.post("/createpost", requireLogin, (req, res) => {
   const { title, body } = req.body;
   if (!title || !body) {
     return res.status(422).json({ error: "Plase add all the fields" });
@@ -39,11 +39,32 @@ router.post("/createpost",requireLogin, (req, res) => {
     });
 });
 
+// router.put("/like", (req, res) => {
+//   console.log(req)
+//   Post.findByIdAndUpdate(
+//     req.body.postId,
+//     {
+//       // $push: { likes: req.user._id },
+//       $push: { likes: req.body.postId },
+//     },
+//     {
+//       new: true,
+//     }
+//   ).exec((err, result) => {
+//     if (err) {
+//       return res.status(422).json({ error: err });
+//     } else {
+//       res.json(result);
+//     }
+//   });
+// });
+
 router.put("/like", (req, res) => {
+  console.log(req.body);
   Post.findByIdAndUpdate(
     req.body.postId,
     {
-      $push: { likes: req.user._id },
+      $push: { likes: req.body.userId },
     },
     {
       new: true,
@@ -56,11 +77,12 @@ router.put("/like", (req, res) => {
     }
   });
 });
+
 router.put("/unlike", requireLogin, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
     {
-      $pull: { likes: req.user._id },
+      $pull: { likes: req.body.userId },
     },
     {
       new: true,

@@ -13,33 +13,39 @@ function Login() {
     if (!username || !password) {
       navigate("/login");
     }
-    // axios.post("/login",)
-    fetch("/login", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password
-      }),
+    let data = JSON.stringify({
+      username,
+      password
     })
-      .then((res) => {
-        res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (!data) {
+
+    axios(
+      {
+        method: "post",
+        url: "/login",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: data
+
+      }
+    )
+      .then(function (res) {
+        console.log(res)
+        if (!res.data) {
           console.log("Seems like user could not found");
           navigate("/signup");
         } else {
-
-          localStorage.setItem("jwt", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("jwt", res.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("id", res.data.user._id)
+          navigate("/")
         }
       })
-      .catch((err) => console.log("error while logging in", err));
-  };
+      .catch((err) => console.log("error while logging in", err.response.data))
+
+
+  }
+
   return (
     <>
       <div className="container">
@@ -47,26 +53,26 @@ function Login() {
         <div className="form">
           {/* <input type="text" className="username" placeholder="username" /> */}
           <input
-          onChange={(e) => setUsername(e.target.value)}
-          type="text" 
-          value={username}
-          className="username" placeholder="username" />
+            onChange={(e) => setUsername(e.target.value)}
+            type="text"
+            value={username}
+            className="username" placeholder="username" />
           <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password" className="password" placeholder="password" />
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password" className="password" placeholder="password" />
           <input
-          onClick={() => {
-            console.log({username, password})
-            PostData()
-          }}
-          type="button" value="Login" />
+            onClick={() => {
+              // console.log({ username, password })
+              PostData()
+            }}
+            type="button" value="Login" />
         </div>
         <span>Don't have an account?
           <span
             className="to"
-            onClick={() => 
-            navigate('/signup')}>
+            onClick={() =>
+              navigate('/signup')}>
             Signup!
           </span>
         </span>

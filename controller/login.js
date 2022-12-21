@@ -13,7 +13,9 @@ const authRoute = express.Router();
 
 authRoute.post("/", async (req, res) => {
   const { username, password } = req.body;
+  // console.log("this is line 16",req.body)
   if (!username || !password) {
+    console.log({username,password})
     return res.status(422).json({ error: "please add username or password" });
   }
   User.findOne({ username: username }).then((savedUser) => {
@@ -36,7 +38,7 @@ authRoute.post("/", async (req, res) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   });
 });
