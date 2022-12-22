@@ -5,10 +5,11 @@ import Login from './Login/Login';
 import Home from "./Home/Home"
 import {Route, Routes} from "react-router-dom"
 import Createpost from './CreatePost/CreatePost';
-
+import Nav from './Nav/Nav';
 function App() {
   return (
     <div className="App">
+      <Nav/>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />

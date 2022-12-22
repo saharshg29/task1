@@ -1,0 +1,9 @@
+.top {
+    display: flex;
+    flex-direction: row;
+}
+ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

@@ -45,6 +45,7 @@ function Createpost() {
 
     return (
         <>
+       
             <div className="card input-filed"
                 style={{
                     margin: "30px auto",

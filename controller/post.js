@@ -97,6 +97,7 @@ router.put("/unlike", requireLogin, (req, res) => {
 });
 
 router.put("/comment", requireLogin, (req, res) => {
+  console.log(req);
   const comment = {
     text: req.body.text,
     postedBy: req.user._id,
