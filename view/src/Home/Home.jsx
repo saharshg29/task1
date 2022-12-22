@@ -12,15 +12,23 @@ function Home() {
         url: '/api/allpost'
     };
 
-    useState(() => {
+    useEffect(() => {
+        getAllPost()
+      }, []);
+
+ 
+    //   GetListOfPost
+      const getAllPost = ()=>{
         axios(config)
-            .then(function (res) {
-                setData(res.data.posts)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    })
+        .then(function (res) {
+            setData(res.data.posts)
+            setComment("")
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+      }
+
 
     const likePost = (id) => {
         axios(
@@ -45,6 +53,7 @@ function Home() {
                     }
                 })
                 setData(newData)
+                getAllPost()
             }).catch(err => {
                 console.log(err)
             })
@@ -73,6 +82,7 @@ function Home() {
                     }
                 })
                 setData(newData)
+                getAllPost()
             }).catch(err => {
                 console.log(err)
             })
@@ -88,9 +98,9 @@ function Home() {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("jwt")
                 },
-                body: JSON.stringify({
+                data: JSON.stringify({
                     postId: id,
-                    text
+                    text: comment
                 })
             }).then(result => {
                 console.log(result)
@@ -102,6 +112,10 @@ function Home() {
                     }
                 })
                 setData(newData)
+                setComment("")
+
+                getAllPost()
+               
             }).catch(err => {
                 console.log(err)
             })
@@ -125,6 +139,7 @@ function Home() {
                     return item._id !== result._id
                 })
                 setData(newData)
+                getAllPost()
             }).catch(err => console.log(err))
     }
 
@@ -186,8 +201,8 @@ function Home() {
                                             e.preventDefault()
                                             makeComment(comment, item._id)
                                         }}>
-                                            <input type="text" onChange={(e) => setComment(e.target.value)} value={comment} placeholder="add a comment" />
-                                            <button type="submit">Add</button>
+                                            <input type="text" onChange={(e) => setComment(e.target.value)}  placeholder="add a comment" />
+                                            <button type="submit">Add Comment</button>
                                         </form>
                                     </div>
                                 </div>
