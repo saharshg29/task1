@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const login = require("./controller/login");
 const signup = require("./controller/signup");
 const post = require("./controller/post")
-const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 5000
 let cors = require("cors")
 
